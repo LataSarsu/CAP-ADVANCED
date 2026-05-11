@@ -154,7 +154,7 @@
                                     }
                                 }
                             },
-                            "hideFilterBar": true
+                            "hideFilterBar": false
                         }
                     },
                     "controlAggregation": "beginColumnPages",
