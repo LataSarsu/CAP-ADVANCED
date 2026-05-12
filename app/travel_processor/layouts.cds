@@ -1,12 +1,14 @@
 using TravelService from '../../srv/travel-service';
+using from '../../db/schema';
+
 
 //
 // annotatios that control the fiori layout
 //
 
 annotate TravelService.Travel with @(
-    UI: {
-    
+    UI                    : {
+
         Identification        : [
             {
                 $Type : 'UI.DataFieldForAction',
@@ -78,14 +80,14 @@ annotate TravelService.Travel with @(
             },
             {
                 $Type : 'UI.DataFieldForAction',
-                Action : 'TravelService.deductDiscount',
+                Action: 'TravelService.deductDiscount',
                 Label : '{i18n>DeductDiscount}',
             },
-        {
-            $Type : 'UI.DataFieldForAnnotation',
-            Target : '@UI.DataPoint#Progress',
-            Label : '{i18n>ProgressOfTravel}',
-        },
+            {
+                $Type : 'UI.DataFieldForAnnotation',
+                Target: '@UI.DataPoint#Progress',
+                Label : '{i18n>ProgressOfTravel}',
+            },
         ],
         Facets                : [
             {
@@ -122,87 +124,119 @@ annotate TravelService.Travel with @(
             }
         ]}
     },
-    UI.DataPoint #Progress : {
-        Value : Progress,
-        Visualization : #Progress,
-        TargetValue : 100,
+    UI.DataPoint #Progress: {
+        Value        : Progress,
+        Visualization: #Progress,
+        TargetValue  : 100,
     },
 );
 
-annotate TravelService.Booking with @UI: {
-    Identification                : [{Value: BookingID}, ],
-    HeaderInfo                    : {
-        TypeName      : '{i18n>Bookings}',
-        TypeNamePlural: '{i18n>Bookings}',
-        Title         : {Value: to_Customer.LastName},
-        Description   : {Value: BookingID}
+annotate TravelService.Booking with @(
+    UI                           : {
+        Identification                : [{Value: BookingID}, ],
+        HeaderInfo                    : {
+            TypeName      : '{i18n>Bookings}',
+            TypeNamePlural: '{i18n>Bookings}',
+            Title         : {Value: to_Customer.LastName},
+            Description   : {Value: BookingID}
+        },
+        PresentationVariant           : {
+            Visualizations: ['@UI.LineItem'],
+            SortOrder     : [{
+                $Type     : 'Common.SortOrderType',
+                Property  : BookingID,
+                Descending: false
+            }]
+        },
+        SelectionFields               : [],
+        LineItem                      : [
+            {
+                Value: to_Carrier.AirlinePicURL,
+                Label: '  '
+            },
+            {Value: BookingID},
+            {Value: BookingDate},
+            {Value: to_Customer_CustomerID},
+            {Value: to_Carrier_AirlineID},
+            {
+                Value: ConnectionID,
+                Label: '{i18n>FlightNumber}'
+            },
+            {Value: FlightDate},
+            {Value: FlightPrice},
+            {Value: BookingStatus_code},
+            {
+                $Type : 'UI.DataFieldForAnnotation',
+                Target: '@UI.Chart#TotalSupplPrice',
+                Label : '{i18n>Supplements}',
+            },
+        ],
+        Facets                        : [
+            {
+                $Type : 'UI.CollectionFacet',
+                Label : '{i18n>GeneralInformation}',
+                ID    : 'Booking',
+                Facets: [
+                    { // booking details
+                        $Type : 'UI.ReferenceFacet',
+                        ID    : 'BookingData',
+                        Target: '@UI.FieldGroup#GeneralInformation',
+                        Label : '{i18n>Booking}'
+                    },
+                    { // flight details
+                        $Type : 'UI.ReferenceFacet',
+                        ID    : 'FlightData',
+                        Target: '@UI.FieldGroup#Flight',
+                        Label : '{i18n>Flight}'
+                    }
+                ]
+            },
+            { // supplements list
+                $Type : 'UI.ReferenceFacet',
+                Target: 'to_BookSupplement/@UI.PresentationVariant',
+                Label : '{i18n>BookingSupplements}'
+            }
+        ],
+        FieldGroup #GeneralInformation: {Data: [
+            {Value: BookingID},
+            {Value: BookingDate, },
+            {Value: to_Customer_CustomerID},
+            {Value: BookingDate, },
+            {Value: BookingStatus_code}
+        ]},
+        FieldGroup #Flight            : {Data: [
+            {Value: to_Carrier_AirlineID},
+            {Value: ConnectionID},
+            {Value: FlightDate},
+            {Value: FlightPrice}
+        ]},
     },
-    PresentationVariant           : {
-        Visualizations: ['@UI.LineItem'],
-        SortOrder     : [{
-            $Type     : 'Common.SortOrderType',
-            Property  : BookingID,
-            Descending: false
-        }]
-    },
-    SelectionFields               : [],
-    LineItem                      : [
-        {
-            Value: to_Carrier.AirlinePicURL,
-            Label: '  '
-        },
-        {Value: BookingID},
-        {Value: BookingDate},
-        {Value: to_Customer_CustomerID},
-        {Value: to_Carrier_AirlineID},
-        {
-            Value: ConnectionID,
-            Label: '{i18n>FlightNumber}'
-        },
-        {Value: FlightDate},
-        {Value: FlightPrice},
-        {Value: BookingStatus_code}
-    ],
-    Facets                        : [
-        {
-            $Type : 'UI.CollectionFacet',
-            Label : '{i18n>GeneralInformation}',
-            ID    : 'Booking',
-            Facets: [
-                { // booking details
-                    $Type : 'UI.ReferenceFacet',
-                    ID    : 'BookingData',
-                    Target: '@UI.FieldGroup#GeneralInformation',
-                    Label : '{i18n>Booking}'
-                },
-                { // flight details
-                    $Type : 'UI.ReferenceFacet',
-                    ID    : 'FlightData',
-                    Target: '@UI.FieldGroup#Flight',
-                    Label : '{i18n>Flight}'
-                }
-            ]
-        },
-        { // supplements list
-            $Type : 'UI.ReferenceFacet',
-            Target: 'to_BookSupplement/@UI.PresentationVariant',
-            Label : '{i18n>BookingSupplements}'
+    UI.DataPoint #TotalSupplPrice: {
+        Value                 : TotalSupplPrice,
+        MinimumValue          : 0,
+        MaximumValue          : 120,
+        TargetValue           : 100,
+        Visualization         : #BulletChart,
+        //Criticality: TotalSupplPrice // it has precedence over criticalityCalculation => in order to have the criticality color do not use it
+        CriticalityCalculation: {
+            $Type                  : 'UI.CriticalityCalculationType',
+            ImprovementDirection   : #Maximize,
+            DeviationRangeLowValue : 20,
+            DeviationRangeHighValue: 75
         }
-    ],
-    FieldGroup #GeneralInformation: {Data: [
-        {Value: BookingID},
-        {Value: BookingDate, },
-        {Value: to_Customer_CustomerID},
-        {Value: BookingDate, },
-        {Value: BookingStatus_code}
-    ]},
-    FieldGroup #Flight            : {Data: [
-        {Value: to_Carrier_AirlineID},
-        {Value: ConnectionID},
-        {Value: FlightDate},
-        {Value: FlightPrice}
-    ]},
-};
+    },
+    UI.Chart #TotalSupplPrice    : {
+        ChartType        : #Bullet,
+        Title            : 'total supplements',
+        AxisScaling      : {$Type: 'UI.ChartAxisScalingType', },
+        Measures         : [TotalSupplPrice, ],
+        MeasureAttributes: [{
+            DataPoint: '@UI.DataPoint#TotalSupplPrice',
+            Role     : #Axis1,
+            Measure  : TotalSupplPrice,
+        }, ],
+    },
+);
 
 annotate TravelService.BookingSupplement with @UI: {
     Identification     : [{Value: BookingSupplementID}],

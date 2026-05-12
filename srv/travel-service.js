@@ -88,9 +88,19 @@ class TravelService extends cds.ApplicationService {
           .from(BookingSupplement.drafts).where({ BookSupplUUID: req.data.BookSupplUUID })
         const { travel } = await SELECT.one`to_Travel_TravelUUID as travel`.from(Booking.drafts)
           .where`BookingUUID = ${booking} `
+        this._update_totals_supplement(booking)
         return this._update_totals4(travel)
       }
     })
+
+    /**
+     * Update the Booking's TotalSupplPrice
+     */
+    this._update_totals_supplement = async function (booking) {
+      const { total } = await SELECT.one`coalesce (sum (Price), 0) as totals`.from(BookingSupplement.drafts).where
+        `to_Booking_BookingUUID = ${booking}`
+      return UPDATE(Booking.drafts, booking).with({ TotalSupplPrice: total })
+    }
 
     /**
      * Update the Travel's TotalPrice when a Booking Supplement is deleted.
