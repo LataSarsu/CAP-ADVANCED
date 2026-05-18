@@ -3,7 +3,6 @@ using from '../../db/schema';
 using from '../../db/master-data';
 
 
-
 //
 // annotatios that control the fiori layout
 //
@@ -92,7 +91,7 @@ annotate TravelService.Travel with @(
             },
             {
                 $Type : 'UI.DataFieldForAnnotation',
-                Target : 'to_Agency/@Communication.Contact#contact',
+                Target: 'to_Agency/@Communication.Contact#contact',
                 Label : '{i18n>AgencyID}',
             },
         ],
@@ -235,7 +234,8 @@ annotate TravelService.Booking with @(
     UI.Chart #TotalSupplPrice    : {
         ChartType        : #Bullet,
         Title            : 'total supplements',
-        AxisScaling      : {$Type: 'UI.ChartAxisScalingType', },
+        AxisScaling      : {$Type: 'UI.ChartAxisScalingType',
+        },
         Measures         : [TotalSupplPrice, ],
         MeasureAttributes: [{
             DataPoint: '@UI.DataPoint#TotalSupplPrice',
@@ -280,27 +280,75 @@ SortOrder: [{
     Property  : FlightDate,
     Descending: true
 }]}};
-annotate TravelService.TravelAgency with @(
-    Communication.Contact #contact : {
-        $Type : 'Communication.ContactType',
-        fn : Name,
-        tel : [
-            {
-                $Type : 'Communication.PhoneNumberType',
-                type : #work,
-                uri : PhoneNumber,
-            },
-        ],
-        adr : [
-            {
-                $Type : 'Communication.AddressType',
-                type : #work,
-                street : Street,
-                code : PostalCode,
-                locality : City,
-                country : CountryCode_code,
-            },
-        ],
-    }
-);
 
+annotate TravelService.TravelAgency with @(Communication.Contact #contact: {
+    $Type: 'Communication.ContactType',
+    fn   : Name,
+    tel  : [{
+        $Type: 'Communication.PhoneNumberType',
+        type : #work,
+        uri  : PhoneNumber,
+    }, ],
+    adr  : [{
+        $Type   : 'Communication.AddressType',
+        type    : #work,
+        street  : Street,
+        code    : PostalCode,
+        locality: City,
+        country : CountryCode_code,
+    }, ],
+});
+
+annotate TravelService.Travel with @UI: {
+    SelectionVariant #canceled: {
+        $Type           : 'UI.SelectionVariantType',
+        ID              : 'canceled',
+        Text            : 'canceled',
+        Parameters      : [],
+        FilterExpression: '',
+        SelectOptions   : [{
+            $Type       : 'UI.SelectOptionType',
+            PropertyName: 'TravelStatus_code',
+            Ranges      : [{
+                $Type : 'UI.SelectionRangeType',
+                Sign  : '#I',
+                Option: '#EQ',
+                Low   : 'X'
+            }, ],
+        }, ],
+    },
+    SelectionVariant #open    : {
+        $Type           : 'UI.SelectionVariantType',
+        ID              : 'open',
+        Text            : 'open',
+        Parameters      : [],
+        FilterExpression: '',
+        SelectOptions   : [{
+            $Type       : 'UI.SelectOptionType',
+            PropertyName: 'TravelStatus_code',
+            Ranges      : [{
+                $Type : 'UI.SelectionRangeTypeType',
+                Sign  : '#I',
+                Option: '#EQ',
+                Low   : 'O'
+            }, ],
+        }, ],
+    },
+    SelectionVariant #accepted: {
+        $Type           : 'UI.SelectionVariantType',
+        ID              : 'accepted',
+        Text            : 'accepted',
+        Parameters      : [],
+        FilterExpression: '',
+        SelectOptions   : [{
+            $Type       : 'UI.SelectOptionType',
+            PropertyName: 'TravelStatus_code',
+            Ranges      : [{
+                $Type : 'UI.SelectionRangeType',
+                Sign  : '#I',
+                Option: '#EQ',
+                Low   : 'A'
+            }, ],
+        }, ],
+    },
+};
