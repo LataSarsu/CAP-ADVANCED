@@ -23,7 +23,7 @@ annotate TravelService.Travel with @(
             },
             {
                 $Type : 'UI.DataFieldForAction',
-                Action : 'TravelService.deductDiscount',
+                Action: 'TravelService.deductDiscount',
                 Label : '{i18n>DeductDiscount}',
             },
         ],
@@ -161,25 +161,25 @@ annotate TravelService.Travel with @(
     UI.LineItem #tableView                     : [
         {
             $Type : 'UI.DataFieldForAction',
-            Action : 'TravelService.rejectTravel',
+            Action: 'TravelService.rejectTravel',
             Label : 'rejectTravel',
         },
         {
-            $Type : 'UI.DataField',
-            Value : Description,
+            $Type: 'UI.DataField',
+            Value: Description,
         },
         {
-            $Type : 'UI.DataField',
-            Value : to_Booking.LastChangedAt,
+            $Type: 'UI.DataField',
+            Value: to_Booking.LastChangedAt,
         },
         {
-            $Type : 'UI.DataField',
-            Value : TravelID,
-            Label : 'TravelID',
+            $Type: 'UI.DataField',
+            Value: TravelID,
+            Label: 'TravelID',
         },
         {
-            $Type : 'UI.DataField',
-            Value : to_Customer_CustomerID,
+            $Type: 'UI.DataField',
+            Value: to_Customer_CustomerID,
         },
     ],
     UI.SelectionPresentationVariant #tableView1: {
@@ -191,42 +191,40 @@ annotate TravelService.Travel with @(
         },
         SelectionVariant   : {
             $Type        : 'UI.SelectionVariantType',
-            SelectOptions: [
-                {
-                    $Type       : 'UI.SelectOptionType',
-                    PropertyName: 'TravelStatus_code',
-                    Ranges      : [{
-                        $Type : 'UI.SelectionRangeType',
-                        Sign  : '#I',
-                        Option: '#EQ',
-                        Low   : 'A'
-                    }, ],
-                },
-            ],
+            SelectOptions: [{
+                $Type       : 'UI.SelectOptionType',
+                PropertyName: 'TravelStatus_code',
+                Ranges      : [{
+                    $Type : 'UI.SelectionRangeType',
+                    Sign  : '#I',
+                    Option: '#EQ',
+                    Low   : 'A'
+                }, ],
+            }, ],
         },
         Text               : '{i18n>Accepted}',
     },
     UI.LineItem #tableView1                    : [
         {
-            $Type : 'UI.DataField',
-            Value : Description,
+            $Type: 'UI.DataField',
+            Value: Description,
         },
         {
-            $Type : 'UI.DataField',
-            Value : LastChangedAt,
+            $Type: 'UI.DataField',
+            Value: LastChangedAt,
         },
         {
-            $Type : 'UI.DataField',
-            Value : TravelID,
-            Label : 'TravelID',
+            $Type: 'UI.DataField',
+            Value: TravelID,
+            Label: 'TravelID',
         },
         {
-            $Type : 'UI.DataField',
-            Value : to_Agency.AgencyID,
+            $Type: 'UI.DataField',
+            Value: to_Agency.AgencyID,
         },
         {
-            $Type : 'UI.DataField',
-            Value : to_Customer.CustomerID,
+            $Type: 'UI.DataField',
+            Value: to_Customer.CustomerID,
         },
     ],
     UI.SelectionPresentationVariant #tableView2: {
@@ -238,60 +236,58 @@ annotate TravelService.Travel with @(
         },
         SelectionVariant   : {
             $Type        : 'UI.SelectionVariantType',
-            SelectOptions: [
-                {
-                    $Type       : 'UI.SelectOptionType',
-                    PropertyName: 'TravelStatus_code',
-                    Ranges      : [{
-                        $Type : 'UI.SelectionRangeType',
-                        Sign  : '#I',
-                        Option: '#EQ',
-                        Low   : 'X'
-                    }, ],
-                },
-            ],
+            SelectOptions: [{
+                $Type       : 'UI.SelectOptionType',
+                PropertyName: 'TravelStatus_code',
+                Ranges      : [{
+                    $Type : 'UI.SelectionRangeType',
+                    Sign  : '#I',
+                    Option: '#EQ',
+                    Low   : 'X'
+                }, ],
+            }, ],
         },
         Text               : '{i18n>Canceled}',
     },
-    UI.DataPoint #TravelStatus_code : {
-        $Type : 'UI.DataPointType',
-        Value : TravelStatus_code,
-        Title : '{i18n>TravelStatus}',
-        Criticality : TravelStatus.criticality,
+    UI.DataPoint #TravelStatus_code            : {
+        $Type      : 'UI.DataPointType',
+        Value      : TravelStatus_code,
+        Title      : '{i18n>TravelStatus}',
+        Criticality: TravelStatus.criticality,
     },
-    UI.HeaderFacets : [
+    UI.HeaderFacets                            : [
         {
             $Type : 'UI.ReferenceFacet',
-            ID : 'TravelStatus_code',
-            Target : '@UI.DataPoint#TravelStatus_code',
+            ID    : 'TravelStatus_code',
+            Target: '@UI.DataPoint#TravelStatus_code',
         },
         {
             $Type : 'UI.ReferenceFacet',
-            ID : 'TotalPrice',
-            Target : '@UI.DataPoint#TotalPrice',
+            ID    : 'TotalPrice',
+            Target: '@UI.DataPoint#TotalPrice',
         },
         {
             $Type : 'UI.ReferenceFacet',
-            ID : 'Progress',
-            Target : '@UI.DataPoint#progress',
+            ID    : 'Progress',
+            Target: '@UI.DataPoint#progress',
         },
     ],
-    UI.DataPoint #TotalPrice : {
-        $Type : 'UI.DataPointType',
-        Value : TotalPrice,
-        Title : '{i18n>TotalPrice}',
+    UI.DataPoint #TotalPrice                   : {
+        $Type: 'UI.DataPointType',
+        Value: TotalPrice,
+        Title: '{i18n>TotalPrice}',
     },
-    UI.DataPoint #progress : {
-        $Type : 'UI.DataPointType',
-        Value : Progress,
-        Title : '{i18n>ProgressOfTravel}',
-        TargetValue : 100,
-        Visualization : #Progress,
+    UI.DataPoint #progress                     : {
+        $Type        : 'UI.DataPointType',
+        Value        : Progress,
+        Title        : '{i18n>ProgressOfTravel}',
+        TargetValue  : 100,
+        Visualization: #Progress,
     },
 );
 
 annotate TravelService.Booking with @(
-    UI                           : {
+    UI                            : {
         Identification                : [{Value: BookingID}, ],
         HeaderInfo                    : {
             TypeName      : '{i18n>Bookings}',
@@ -370,7 +366,7 @@ annotate TravelService.Booking with @(
             {Value: FlightPrice}
         ]},
     },
-    UI.DataPoint #TotalSupplPrice: {
+    UI.DataPoint #TotalSupplPrice : {
         Value                 : TotalSupplPrice,
         MinimumValue          : 0,
         MaximumValue          : 120,
@@ -384,7 +380,7 @@ annotate TravelService.Booking with @(
             DeviationRangeHighValue: 75
         }
     },
-    UI.Chart #TotalSupplPrice    : {
+    UI.Chart #TotalSupplPrice     : {
         ChartType        : #Bullet,
         Title            : 'total supplements',
         AxisScaling      : {$Type: 'UI.ChartAxisScalingType',
@@ -396,41 +392,40 @@ annotate TravelService.Booking with @(
             Measure  : TotalSupplPrice,
         }, ],
     },
-    UI.DataPoint #TotalSupplPrice1 : {
-        Value : TotalSupplPrice,
-        MinimumValue : 0,
-        TargetValue: 100,
-        MaximumValue : 120,
-        Visualization : #BulletChart,
-         //Criticality: TotalSupplPrice // it has precedence over criticalityCalculation => in order to have the criticality color do not use it
-        CriticalityCalculation : {
-            $Type : 'UI.CriticalityCalculationType',
-            ImprovementDirection : #Maximize,  
-            DeviationRangeLowValue : 20,
-            ToleranceRangeLowValue : 75
-        } 
+    UI.DataPoint #TotalSupplPrice1: {
+        Value                 : TotalSupplPrice,
+        // MinimumValue : 0,
+        MinimumValue          : {$edmJson: {$Path: '/SupplementScope/MinimumValue'}},
+        // TargetValue: 100,
+        TargetValue           : {$edmJson: {$Path: '/SupplementScope/TargetValue'}},
+        // MaximumValue : 120,
+        MaximumValue          : {$edmJson: {$Path: '/SupplementScope/MaximumValue'}},
+        Visualization         : #BulletChart,
+        //Criticality: TotalSupplPrice // it has precedence over criticalityCalculation => in order to have the criticality color do not use it
+        CriticalityCalculation: {
+            $Type                 : 'UI.CriticalityCalculationType',
+            ImprovementDirection  : #Maximize,
+            // DeviationRangeLowValue: 20,
+            // ToleranceRangeLowValue: 75
+            DeviationRangeLowValue: {$edmJson: {$Path: '/SupplementScope/DeviationRangeLowValue'}},
+            ToleranceRangeLowValue: {$edmJson: {$Path: '/SupplementScope/ToleranceRangeLowValue'}}
+        }
     },
-    UI.Chart #TotalSupplPrice1 : {
-        ChartType : #Bullet,
-        Title : '{i18n>TotalSupplements}',
-        Measures : [
-            TotalSupplPrice,
-        ],
-        MeasureAttributes : [
-            {
-                DataPoint : '@UI.DataPoint#TotalSupplPrice1',
-                Role : #Axis1,
-                Measure : TotalSupplPrice,
-            },
-        ],
+    UI.Chart #TotalSupplPrice1    : {
+        ChartType        : #Bullet,
+        Title            : '{i18n>TotalSupplements}',
+        Measures         : [TotalSupplPrice, ],
+        MeasureAttributes: [{
+            DataPoint: '@UI.DataPoint#TotalSupplPrice1',
+            Role     : #Axis1,
+            Measure  : TotalSupplPrice,
+        }, ],
     },
-    UI.HeaderFacets : [
-        {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'TotalSupplPrice',
-            Target : '@UI.Chart#TotalSupplPrice1',
-        },
-    ],
+    UI.HeaderFacets               : [{
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'TotalSupplPrice',
+        Target: '@UI.Chart#TotalSupplPrice1',
+    }, ],
 );
 
 annotate TravelService.BookingSupplement with @UI: {
