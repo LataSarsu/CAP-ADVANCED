@@ -105,19 +105,21 @@ annotate TravelService.Travel with @(
                 $Type : 'UI.CollectionFacet',
                 Label : '{i18n>GeneralInformation}',
                 ID    : 'Travel',
-                Facets: [{ // travel details
-                    $Type : 'UI.ReferenceFacet',
-                    ID    : 'TravelData',
-                    Target: '@UI.FieldGroup#TravelData',
-                    Label : '{i18n>GeneralInformation}'
-                },
-                    {
+                Facets: [
+                    { // travel details
                         $Type : 'UI.ReferenceFacet',
-                        Label : '{i18n>TravelAdministrativeData}',
-                        ID : 'i18nTravelAdministrativeData',
-                        Target : '@UI.FieldGroup#i18nTravelAdministrativeData',
-                        @UI.PartOfPreview : false,
-                    },]
+                        ID    : 'TravelData',
+                        Target: '@UI.FieldGroup#TravelData',
+                        Label : '{i18n>GeneralInformation}'
+                    },
+                    {
+                        $Type            : 'UI.ReferenceFacet',
+                        Label            : '{i18n>TravelAdministrativeData}',
+                        ID               : 'i18nTravelAdministrativeData',
+                        Target           : '@UI.FieldGroup#i18nTravelAdministrativeData',
+                        @UI.PartOfPreview: false,
+                    },
+                ]
             },
             { // booking list
                 $Type : 'UI.ReferenceFacet',
@@ -131,12 +133,12 @@ annotate TravelService.Travel with @(
             {Value: to_Customer_CustomerID},
             {Value: Description},
             {
-                $Type : 'UI.DataField',
-                Value : EndDate,
+                $Type: 'UI.DataField',
+                Value: EndDate,
             },
             {
-                $Type : 'UI.DataField',
-                Value : BeginDate,
+                $Type: 'UI.DataField',
+                Value: BeginDate,
             },
         ]},
         FieldGroup #DateData  : {Data: [
@@ -299,20 +301,20 @@ annotate TravelService.Travel with @(
         TargetValue  : 100,
         Visualization: #Progress,
     },
-    UI.FieldGroup #i18nTravelAdministrativeData : {
-        $Type : 'UI.FieldGroupType',
+    UI.FieldGroup #i18nTravelAdministrativeData: {
+        $Type: 'UI.FieldGroupType',
         Data : [
             {
-                $Type : 'UI.DataField',
-                Value : createdAt,
+                $Type: 'UI.DataField',
+                Value: createdAt,
             },
             {
-                $Type : 'UI.DataField',
-                Value : createdBy,
+                $Type: 'UI.DataField',
+                Value: createdBy,
             },
             {
-                $Type : 'UI.DataField',
-                Value : LastChangedAt,
+                $Type: 'UI.DataField',
+                Value: LastChangedAt,
             },
         ],
     },
@@ -567,8 +569,15 @@ annotate TravelService.Travel with @UI: {
         }, ],
     },
 };
+
 annotate TravelService.Travel with {
-    Description @UI.MultiLineText : true
-    @UI.Placeholder: '{i18n>DescrPlceHldr}'
+    Description @UI.MultiLineText: true
+                @UI.Placeholder  : '{i18n>DescrPlceHldr}'
 };
 
+annotate TravelService.Travel @(
+    Common.SideEffects#ReactionItemCreationOrDeletion: {
+        SourceEntities  : [to_Booking, ],
+        TargetProperties: ['TotalPrice']
+},
+);
