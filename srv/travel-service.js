@@ -9,6 +9,20 @@ class TravelService extends cds.ApplicationService {
      */
     const { Travel, Booking, BookingSupplement } = this.entities
 
+    /**
+     * Function import handler: getBookingDataOfPassenger
+     * @param CustomerID
+     * @return BookingData
+     */
+    this.on('getBookingDataOfPassenger', async (req) => {
+      const { CustomerID } = req.data
+      const allCustomerBookings = await SELECT`BookingStatus_code as status`.from(Booking).where`to_Customer_CustomerID = ${CustomerID}`
+      const BookingData = {
+        HasNewBookings: false
+      }
+      BookingData.HasNewBookings = allCustomerBookings.some(booking => booking.status === 'N');
+      return BookingData
+    });
 
     /**
      * Fill in primary keys for new Travels.
