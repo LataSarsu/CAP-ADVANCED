@@ -14,7 +14,11 @@ using {
 namespace sap.fe.cap.travel;
 
 type BookingData : {
-  HasNewBookings : Boolean;
+  // HasNewBookings : Boolean;
+  TotalBookingsCount    : Integer;
+  NewBookingsCount      : Integer;
+  AcceptedBookingsCount : Integer;
+  CanceledBookingsCount : Integer;
 }
 
 entity Travel : managed {

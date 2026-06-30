@@ -1,4 +1,4 @@
-sap.ui.define(['sap/ui/core/mvc/ControllerExtension', 'sap/ui/core/message/Message', 'sap/ui/core/message/MessageType'], function (ControllerExtension, Message, MessageType) {
+sap.ui.define(['sap/ui/core/mvc/ControllerExtension', 'sap/ui/core/message/Message', 'sap/ui/core/message/MessageType', 'sap/ui/model/json/JSONModel'], function (ControllerExtension, Message, MessageType, JSONModel) {
 	'use strict';
 
 	return ControllerExtension.extend('sap.fe.cap.customer.ext.controller.PassengerOPExtend', {
@@ -28,17 +28,29 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', 'sap/ui/core/message/Messa
 						oInfoMessage = new Message({
 							type: MessageType.Information,
 							message: await oExtensionAPI.getModel('i18n').getResourceBundle().getText('bookingsAttention')
+						}),
+						oPassengerBookingModel = new JSONModel({
+							totalBookingsCount: 0,
+							newBookingsCount: 0,
+							acceptedBookingsCount: 0,
+							canceledBookingsCount: 0
 						});
-
+					this.base.getView().setModel(oPassengerBookingModel, "passengerBookingsModel");
 					// Request OData function with Current Customer ID
 					const oCustomer = await oBindingContext.requestObject(oBindingContext.getPath());
 					oFunction.setParameter("CustomerID", oCustomer.CustomerID);
 					await oFunction.execute();
 					const oContext = oFunction.getBoundContext();
+					oPassengerBookingModel.setProperty("/totalBookingsCount", oContext.getProperty("TotalBookingsCount"));
+					oPassengerBookingModel.setProperty("/newBookingsCount", oContext.getProperty("NewBookingsCount"));
+					oPassengerBookingModel.setProperty("/acceptedBookingsCount", oContext.getProperty("AcceptedBookingsCount"));
+					oPassengerBookingModel.setProperty("/canceledBookingsCount", oContext.getProperty("CanceledBookingsCount"));
+					oPassengerBookingModel.refresh();
 					if (this.message === undefined) {
 						oBookingTableAPI.removeMessage(this.message)
 					}
-					if (oContext.getProperty("HasNewBookings")) {
+					// if (oContext.getProperty("HasNewBookings")) {
+					if (oContext.getProperty("NewBookingsCount") > 0) {
 						this.message = oBookingTableAPI.addMessage(oWarningMessage);
 						this.base.getExtensionAPI().showMessages([oInfoMessage]);
 					}

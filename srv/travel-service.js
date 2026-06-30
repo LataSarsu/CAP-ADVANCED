@@ -18,9 +18,34 @@ class TravelService extends cds.ApplicationService {
       const { CustomerID } = req.data
       const allCustomerBookings = await SELECT`BookingStatus_code as status`.from(Booking).where`to_Customer_CustomerID = ${CustomerID}`
       const BookingData = {
-        HasNewBookings: false
+      //  HasNewBookings: false,
+        TotalBookingsCount: 0,
+        NewBookingsCount: 0,
+        AcceptedBookingsCount: 0,
+        CanceledBookingsCount: 0
       }
-      BookingData.HasNewBookings = allCustomerBookings.some(booking => booking.status === 'N');
+      // BookingData.HasNewBookings = allCustomerBookings.some(booking => booking.status === 'N');
+      allCustomerBookings.forEach(booking => {
+        BookingData.TotalBookingsCount++
+        // if (booking.status === 'N') BookingData.NewBookingsCount++
+        // else if (booking.status === 'B') BookingData.AcceptedBookingsCount++
+        // else if (booking.status === 'X') BookingData.CanceledBookingsCount++     co-pilot given code.
+
+        // SAP's enable now code
+        switch (booking.status) {
+          case 'N':
+            BookingData.NewBookingsCount++
+            break;
+          case 'B':
+            BookingData.AcceptedBookingsCount++
+            break;
+          case 'X':
+            BookingData.CanceledBookingsCount++
+            break;
+          default:
+            break;
+        }
+      })
       return BookingData
     });
 
